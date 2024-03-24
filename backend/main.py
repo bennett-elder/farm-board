@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 import uvicorn
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import settings
@@ -6,6 +7,10 @@ from config import settings
 from apps.todo.routers import router as todo_router
 
 app = FastAPI()
+
+app.include_router(todo_router, tags=["tasks"], prefix="/task")
+
+app.mount("/", StaticFiles(directory="../frontend/build",html = True), name="static")
 
 
 @app.on_event("startup")
@@ -17,9 +22,6 @@ async def startup_db_client():
 @app.on_event("shutdown")
 async def shutdown_db_client():
     app.mongodb_client.close()
-
-
-app.include_router(todo_router, tags=["tasks"], prefix="/task")
 
 
 if __name__ == "__main__":
