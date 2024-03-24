@@ -1,14 +1,20 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Security, Depends
 from fastapi.staticfiles import StaticFiles
+from fastapi.security import APIKeyHeader, APIKeyQuery
 import uvicorn
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import settings
 
 from apps.todo.routers import router as todo_router
+import api_security
 
 app = FastAPI()
 
 app.include_router(todo_router, tags=["tasks"], prefix="/task")
+
+# app.include_router(todo_router, tags=["tasks"], prefix="/task",
+#         dependencies=[Depends(api_security.get_api_key)]
+#     )
 
 app.mount("/", StaticFiles(directory="../frontend/build",html = True), name="static")
 
