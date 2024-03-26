@@ -1,2 +1,2 @@
-# FARM-Intro
-Introducing FARM - FastAPI, React &amp; MongoDB
+# Intro
+Introducing FARM-Board - FastAPI, React & MongoDB quick status board
