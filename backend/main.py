@@ -18,7 +18,7 @@ if (settings.APP_MODE == "poster"):
         )
 elif (settings.APP_MODE == "viewer"):
     app.include_router(viewer_router, tags=["posts"], prefix="/post")
-    app.mount("/", StaticFiles(directory="../frontend/build",html = True), name="static")
+    app.mount("/", StaticFiles(directory=settings.FRONTEND_BUILD_PATH,html = True), name="static")
 
 
 @app.on_event("startup")
