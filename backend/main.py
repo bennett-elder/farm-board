@@ -10,13 +10,13 @@ import api_security
 
 app = FastAPI()
 
-app.include_router(todo_router, tags=["tasks"], prefix="/task")
-
-# app.include_router(todo_router, tags=["tasks"], prefix="/task",
-#         dependencies=[Depends(api_security.get_api_key)]
-#     )
-
-app.mount("/", StaticFiles(directory="../frontend/build",html = True), name="static")
+if (settings.APP_MODE == "poster"):
+    app.include_router(todo_router, tags=["tasks"], prefix="/task",
+            dependencies=[Depends(api_security.get_api_key)]
+        )
+elif (settings.APP_MODE == "viewer"):
+    app.include_router(todo_router, tags=["tasks"], prefix="/task")
+    app.mount("/", StaticFiles(directory="../frontend/build",html = True), name="static")
 
 
 @app.on_event("startup")

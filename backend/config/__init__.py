@@ -2,14 +2,15 @@ from pydantic_settings import BaseSettings
 
 
 class CommonSettings(BaseSettings):
-    APP_NAME: str = "FARM Intro"
+    APP_NAME: str = "FARM Board"
     DEBUG_MODE: bool = False
+    APP_MODE: str = "poster"
 
 
 class ServerSettings(BaseSettings):
     HOST: str = "0.0.0.0"
     PORT: int = 8000
-
+    API_KEYS: str
 
 class DatabaseSettings(BaseSettings):
     DB_URL: str
