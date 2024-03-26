@@ -1,21 +1,18 @@
-import "antd/dist/antd.css"
-
-import { CheckCircleOutlined, MinusCircleOutlined } from "@ant-design/icons"
-import { Col, Row, Timeline } from "antd"
 import { useEffect, useState } from "react"
 
+
 function App() {
-    const [tasks, setTasks] = useState([])
-    const [timeline, setTimeline] = useState([])
+    const [posts, setPosts] = useState([])
+    const [board, setBoard] = useState([])
 
     useEffect(() => {
-        const fetchAllTasks = async () => {
-            const response = await fetch("/task/")
-            const fetchedTasks = await response.json()
-            setTasks(fetchedTasks)
+        const fetchAllPosts = async () => {
+            const response = await fetch("/post/")
+            const fetchedPosts = await response.json()
+            setPosts(fetchedPosts)
         }
 
-        const interval = setInterval(fetchAllTasks, 1000)
+        const interval = setInterval(fetchAllPosts, 1000)
 
         return () => {
             clearInterval(interval)
@@ -23,36 +20,16 @@ function App() {
     }, [])
 
     useEffect(() => {
-        const timelineItems = tasks.reverse().map((task) => {
-            return task.completed ? (
-                <Timeline.Item
-                    dot={<CheckCircleOutlined />}
-                    color="green"
-                    style={{ textDecoration: "line-through", color: "green" }}
-                >
-                    {task.name} <small>({task._id})</small>
-                </Timeline.Item>
-            ) : (
-                <Timeline.Item
-                    dot={<MinusCircleOutlined />}
-                    color="blue"
-                    style={{ textDecoration: "initial" }}
-                >
-                    {task.name} <small>({task._id})</small>
-                </Timeline.Item>
-            )
+        const boardItems = posts.reverse().map((post) => {
+            return <p>{post.date} - {post.id} - {post.blurb}</p>
         })
 
-        setTimeline(timelineItems)
-    }, [tasks])
+        setBoard(boardItems)
+    }, [posts])
 
     return (
         <>
-            <Row style={{ marginTop: 50 }}>
-                <Col span={14} offset={5}>
-                    <Timeline mode="alternate">{timeline}</Timeline>
-                </Col>
-            </Row>
+            <div>{board}</div>
         </>
     )
 }

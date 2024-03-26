@@ -5,17 +5,19 @@ import uvicorn
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import settings
 
-from apps.todo.routers import router as todo_router
+from apps.poster.routers import router as poster_router
+from apps.viewer.routers import router as viewer_router
+
 import api_security
 
 app = FastAPI()
 
 if (settings.APP_MODE == "poster"):
-    app.include_router(todo_router, tags=["tasks"], prefix="/task",
+    app.include_router(poster_router, tags=["posts"], prefix="/post",
             dependencies=[Depends(api_security.get_api_key)]
         )
 elif (settings.APP_MODE == "viewer"):
-    app.include_router(todo_router, tags=["tasks"], prefix="/task")
+    app.include_router(viewer_router, tags=["posts"], prefix="/post")
     app.mount("/", StaticFiles(directory="../frontend/build",html = True), name="static")
 
 
