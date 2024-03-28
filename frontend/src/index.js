@@ -1,18 +1,42 @@
 import "./index.css"
+import Root, { loader as rootLoader } from "./routes/root";
 
-import App from "./App"
 import React from "react"
 import ReactDOM from "react-dom"
-import reportWebVitals from "./reportWebVitals"
+import {
+    createBrowserRouter,
+    RouterProvider,
+    useLoaderData,
+} from "react-router-dom";
+import ErrorPage from "./error-page";
+import Post, {
+    loader as postLoader,
+  } from "./routes/post";
 
+const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Root />,
+      errorElement: <ErrorPage />,
+      loader: rootLoader,
+      children: [
+        {
+          path: "posts/:id",
+          element: <Post />,
+          loader: postLoader
+        },
+      ],
+    },
+    // {
+    //     path: "posts/:id",
+    //     element: <Post />,
+    //     loader: postLoader
+    // },
+]);
+  
 ReactDOM.render(
     <React.StrictMode>
-        <App />
+        <RouterProvider router={router} />
     </React.StrictMode>,
     document.getElementById("root")
 )
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals()
