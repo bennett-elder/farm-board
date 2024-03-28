@@ -25,7 +25,14 @@ elif (settings.APP_MODE == "viewer"):
 async def startup_db_client():
     app.mongodb_client = AsyncIOMotorClient(settings.DB_URL)
     app.mongodb = app.mongodb_client[settings.DB_NAME]
-
+    if (settings.API_KEYS == 'USE TABLE'):
+        key_collection=app.mongodb["api-keys"]
+        cursor=key_collection.find()
+        keys=[]
+        for document in await cursor.to_list(length=10000):
+            keys.append(document["key"])        
+        csvlist=','.join(keys)
+        settings.API_KEYS = csvlist
 
 @app.on_event("shutdown")
 async def shutdown_db_client():

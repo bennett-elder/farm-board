@@ -6,9 +6,6 @@ from config import settings
 api_key_query = APIKeyQuery(name="api-key", auto_error=False)
 api_key_header = APIKeyHeader(name="x-api-key", auto_error=False)
 
-#API_KEYS = os.environ.get('API_KEYS').split(',')
-API_KEYS = settings.API_KEYS
-
 
 def get_api_key(
     api_key_query: str = Security(api_key_query),
@@ -27,6 +24,9 @@ def get_api_key(
     Raises:
         HTTPException: If the API key is invalid or missing.
     """
+    API_KEYS = settings.API_KEYS
+    print(API_KEYS)
+    print(settings.API_KEYS)
     if api_key_query is None and api_key_header is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
