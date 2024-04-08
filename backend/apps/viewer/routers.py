@@ -16,7 +16,7 @@ async def list_posts(request: Request):
 async def show_task(id: str, request: Request):
     if (post := await request.app.mongodb["posts"].find_one({"id": id})) is not None:
         comments = []
-        for doc in await request.app.mongodb["comments"].find({"id": id},{'_id': 0}).to_list(length=100):
+        for doc in await request.app.mongodb["comments"].find({"id": id},{'_id': 0}).sort({"_id":-1}).to_list(length=100):
             comments.append(doc)
         return comments
 
