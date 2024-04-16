@@ -15,30 +15,19 @@ export default function Root() {
       <div id="sidebar">
         <h1><Link to="/">Farm Board Posts</Link> ({posts.length})</h1>
         <nav>
-        <table>
           {posts.length ? (
-              <ul>
+              <table>
                 {posts.map((post) => (
-                  <li key={post.id}>
-                    
-                      {post.id ? (
-                        <tr>
-                          <td><Link to={`posts/${post.id}`}>{post.id}</Link></td><td>{moment(post.date).format('MM/DD/YYYY HH:mm')}</td><td>{post.blurb}</td>
-                        </tr>
-                        
-                      ) : (
-                        <i>No Name</i>
-                      )}{" "}
-                    
-                  </li>
+                  <tr key={post.id}>
+                      <td><Link to={`posts/${post.id}`}>{post.id}</Link></td><td>{moment(post.date).format('MM/DD/YYYY HH:mm')}</td><td>{post.blurb}</td>
+                  </tr>
                 ))}
-              </ul>
+              </table>
             ) : (
               <p>
                 <i>No posts</i>
               </p>
             )}
-            </table>
         </nav>
       </div>
       <div id="detail">
