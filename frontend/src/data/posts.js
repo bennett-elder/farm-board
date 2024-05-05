@@ -11,3 +11,9 @@ export async function getPostComments(id) {
   const post = await response.json();
   return post;
 }
+
+export async function getCustomPostsName() {
+  const response = await fetch(`/config.json`);
+  const config = await response.json();
+  return config["customPostsName"];
+}

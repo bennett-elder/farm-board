@@ -12,6 +12,10 @@ class ServerSettings(BaseSettings):
     PORT: int = 8000
     API_KEYS: str
     FRONTEND_BUILD_PATH: str = "../frontend/build"
+    FRONTEND_TITLE: str = "FARM Board"
+    FRONTEND_SHORTNAME: str = "farm-board"
+    FRONTEND_DESCRIPTION: str = "Status board built with Fast API React Mongodb"
+    FRONTEND_POSTS_NAME: str = "FARM Board Posts"
 
 class DatabaseSettings(BaseSettings):
     DB_URL: str

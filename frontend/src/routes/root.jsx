@@ -1,19 +1,20 @@
 import { Outlet, Link, useLoaderData } from "react-router-dom";
 import moment from "moment";
-import { getPosts } from "../data/posts";
+import { getPosts, getCustomPostsName } from "../data/posts";
 
 export async function loader() {
   const posts = await getPosts();
   console.debug(posts);
-  return { posts };
+  const customPostsName = await getCustomPostsName();
+  return { posts, customPostsName };
 }
 
 export default function Root() {
-  const { posts } = useLoaderData();
+  const { posts, customPostsName } = useLoaderData();
   return (
     <>
       <div id="sidebar">
-        <h1><Link to="/">Farm Board Posts</Link> ({posts.length})</h1>
+        <h1><Link to="/">{customPostsName}</Link> ({posts.length})</h1>
         <nav>
           {posts.length ? (
               <table>

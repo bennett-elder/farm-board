@@ -9,6 +9,7 @@ from apps.poster.routers import router as poster_router
 from apps.viewer.routers import router as viewer_router
 
 import api_security
+import json
 
 app = FastAPI()
 
@@ -33,6 +34,27 @@ async def startup_db_client():
             keys.append(document["key"])        
         csvlist=','.join(keys)
         settings.API_KEYS = csvlist
+    frontend_folder = settings.FRONTEND_BUILD_PATH
+    replace_title_and_description(f'{frontend_folder}/index.html')
+    replace_title_and_description(f'{frontend_folder}/manifest.json')
+    write_frontend_config_file()
+
+def replace_title_and_description(file_path):
+    with open(file_path, "r+") as f:
+        content = f.read()
+        content = content.replace('__TITLE__', settings.FRONTEND_TITLE)
+        content = content.replace('__SHORTNAME__', settings.FRONTEND_SHORTNAME)
+        content = content.replace('__DESCRIPTION__', settings.FRONTEND_DESCRIPTION)
+        f.seek(0)
+        f.write(content)
+        f.truncate()
+
+def write_frontend_config_file():
+    with open(f'{settings.FRONTEND_BUILD_PATH}/config.json', "w") as f:
+        output = {}
+        output["customPostsName"] = settings.FRONTEND_POSTS_NAME
+        output_as_string = json.dumps(output)
+        f.write(output_as_string)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():

@@ -1,6 +1,6 @@
 {
-  "short_name": "FARM Board",
-  "name": "FARM Board - Fast API React Mongodb status board",
+  "short_name": "__SHORTNAME__",
+  "name": "__TITLE__",
   "icons": [
     {
       "src": "favicon.ico",
