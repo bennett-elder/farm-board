@@ -2,12 +2,14 @@ from fastapi import APIRouter, Body, Request, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
+from config import settings
+
 router = APIRouter()
 
 @router.get("/", response_description="List all posts")
 async def list_posts(request: Request):
     posts = []
-    for doc in await request.app.mongodb["posts"].find({},{'_id': 0}).to_list(length=100):
+    for doc in await request.app.mongodb["posts"].find({},{'_id': 0}).to_list(length=settings.FRONTEND_POST_LIMIT):
         posts.append(doc)
     return posts
 

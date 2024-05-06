@@ -16,6 +16,7 @@ class ServerSettings(BaseSettings):
     FRONTEND_SHORTNAME: str = "farm-board"
     FRONTEND_DESCRIPTION: str = "Status board built with Fast API React Mongodb"
     FRONTEND_POSTS_NAME: str = "FARM Board Posts"
+    FRONTEND_POST_LIMIT: int = 250
 
 class DatabaseSettings(BaseSettings):
     DB_URL: str
