@@ -15,9 +15,14 @@ body {
 #sidebar {
   width: 35rem;
   height: 95vh;
-  overflow-y:scroll;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+#sidebar nav {
+  flex: 1;
+  overflow-y: scroll;
 }
 
 #sidebar nav a {
@@ -47,9 +52,49 @@ body {
   color: hsl(224, 98%, 58%);
 }
 
+#filter {
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  margin-bottom: 0.5rem;
+  font-family: monospace;
+  font-size: 0.9rem;
+  border: 1px solid black;
+  box-sizing: border-box;
+}
+
+#sidebar nav table,
+#post table {
+  border-collapse: collapse;
+}
+
+#sidebar nav table tr td,
+#post table tr td {
+  border: 1px solid black;
+  font-family: monospace;
+}
+
 #sidebar nav table tr td {
   width: 10rem;
   overflow-x: ;
+}
+
+.stale {
+  background-color: #fefce8 !important;
+}
+
+.stale td:nth-child(2) {
+  color: #b45309;
+  font-weight: bold;
+}
+
+#sidebar nav table tr:nth-child(odd),
+#post table tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+#sidebar nav table tr:nth-child(even),
+#post table tr:nth-child(even) {
+  background-color: #e8e8e8;
 }
 
 #detail tr td {
