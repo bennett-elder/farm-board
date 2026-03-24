@@ -1,0 +1,33 @@
+{
+  "name": "farm-board",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "24"
+    }
+  },
+  "forwardPorts": [8000, 3000, 27017],
+  "portsAttributes": {
+    "8000": { "label": "Backend API" },
+    "3000": { "label": "Frontend Dev Server" },
+    "27017": { "label": "MongoDB" }
+  },
+  "postCreateCommand": "pip install -r /workspace/backend/requirements.txt && cd /workspace/frontend && npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.debugpy",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "mongodb.mongodb-vscode"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.analysis.extraPaths": ["/workspace/backend"]
+      }
+    }
+  }
+}

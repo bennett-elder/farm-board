@@ -1,0 +1,17 @@
+version: '3.8'
+
+# Spins up a local MongoDB for development.
+# Usage: docker compose up -d
+# Then run the backend and frontend separately (see .vscode/launch.json).
+
+services:
+  mongodb:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+
+volumes:
+  mongodb-data:
