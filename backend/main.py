@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Security, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.security import APIKeyHeader, APIKeyQuery
+from fastapi.responses import JSONResponse
 import uvicorn
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import settings
@@ -20,6 +21,17 @@ if (settings.APP_MODE == "poster"):
 elif (settings.APP_MODE == "viewer"):
     app.include_router(viewer_router, tags=["posts"], prefix="/post")
     app.mount("/", StaticFiles(directory=settings.FRONTEND_BUILD_PATH,html = True), name="static")
+elif (settings.APP_MODE == "dev"):
+    # Serves both viewer (GET) and poster (POST) APIs without mounting static files.
+    # Use with the frontend dev server (npm start).
+    app.include_router(viewer_router, tags=["posts"], prefix="/post")
+    app.include_router(poster_router, tags=["posts"], prefix="/post",
+            dependencies=[Depends(api_security.get_api_key)]
+        )
+
+    @app.get("/config.json", include_in_schema=False)
+    async def frontend_config():
+        return JSONResponse({"customPostsName": settings.FRONTEND_POSTS_NAME})
 
 
 @app.on_event("startup")
@@ -34,10 +46,11 @@ async def startup_db_client():
             keys.append(document["key"])        
         csvlist=','.join(keys)
         settings.API_KEYS = csvlist
-    frontend_folder = settings.FRONTEND_BUILD_PATH
-    replace_title_and_description(f'{frontend_folder}/index.html')
-    replace_title_and_description(f'{frontend_folder}/manifest.json')
-    write_frontend_config_file()
+    if settings.APP_MODE != "dev":
+        frontend_folder = settings.FRONTEND_BUILD_PATH
+        replace_title_and_description(f'{frontend_folder}/index.html')
+        replace_title_and_description(f'{frontend_folder}/manifest.json')
+        write_frontend_config_file()
 
 def replace_title_and_description(file_path):
     with open(file_path, "r+") as f:
