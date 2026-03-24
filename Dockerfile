@@ -20,9 +20,9 @@ RUN cd /app
 COPY /backend /app
 RUN pip install -r requirements.txt
 
-FROM node:16.17.0 as builder
+FROM node:24 AS builder
 COPY /frontend .
-RUN npm install & npm run build
+RUN npm install && npm run build
 
 FROM base AS final
 WORKDIR /app
