@@ -10,7 +10,7 @@ anyio==4.2.0
     # via
     #   starlette
     #   watchfiles
-black==23.12.1
+black==24.3.0
     # via -r requirements.in
 build==1.0.3
     # via pip-tools
@@ -19,7 +19,7 @@ click==8.1.7
     #   black
     #   pip-tools
     #   uvicorn
-dnspython==2.4.2
+dnspython==2.6.1
     # via
     #   -r requirements.in
     #   email-validator
@@ -30,11 +30,11 @@ fastapi==0.109.0
     # via -r requirements.in
 flake8==7.0.0
     # via -r requirements.in
-h11==0.14.0
+h11==0.16.0
     # via uvicorn
 httptools==0.6.1
     # via uvicorn
-idna==3.6
+idna==3.7
     # via
     #   anyio
     #   email-validator
@@ -67,7 +67,7 @@ pydantic-settings==2.1.0
     # via -r requirements.in
 pyflakes==3.2.0
     # via flake8
-pymongo==4.6.1
+pymongo==4.6.3
     # via motor
 pyproject-hooks==1.0.0
     # via build
