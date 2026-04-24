@@ -35,7 +35,7 @@ jobs:
         run: |
           YEAR=$(date -u +%Y)
           MONTH=$(( 10#$(date -u +%m) ))
-          MINOR=$(( YEAR * 12 + MONTH - 30312 ))
+          MINOR=$(( YEAR * 12 + MONTH - 24312 ))
           echo "tag=10.${MINOR}.$(date -u +%d%H%M)" >> $GITHUB_OUTPUT
 
       - name: Log in to GitHub Container Registry
