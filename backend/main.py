@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Security, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.security import APIKeyHeader, APIKeyQuery
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+import os
 import uvicorn
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import settings
@@ -20,7 +21,14 @@ if (settings.APP_MODE == "poster"):
         )
 elif (settings.APP_MODE == "viewer"):
     app.include_router(viewer_router, tags=["posts"], prefix="/post")
-    app.mount("/", StaticFiles(directory=settings.FRONTEND_BUILD_PATH,html = True), name="static")
+    app.mount("/assets", StaticFiles(directory=f"{settings.FRONTEND_BUILD_PATH}/assets"), name="assets")
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def serve_spa(full_path: str):
+        file_path = os.path.join(settings.FRONTEND_BUILD_PATH, full_path)
+        if os.path.isfile(file_path):
+            return FileResponse(file_path)
+        return FileResponse(f"{settings.FRONTEND_BUILD_PATH}/index.html")
 elif (settings.APP_MODE == "dev"):
     # Serves both viewer (GET) and poster (POST) APIs without mounting static files.
     # Use with the frontend dev server (npm start).
