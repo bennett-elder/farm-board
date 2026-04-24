@@ -1,9 +1,7 @@
-import sortBy from "sort-by";
-
 export async function getPosts(query) {
   const response = await fetch(`/post/`);
   const posts = await response.json();
-  return posts.sort(sortBy("id"));
+  return posts.sort((a, b) => a.id.localeCompare(b.id));
 }
 
 export async function getPostComments(id) {

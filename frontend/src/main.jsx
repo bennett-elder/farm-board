@@ -6,7 +6,6 @@ import ReactDOM from "react-dom"
 import {
     createBrowserRouter,
     RouterProvider,
-    useLoaderData,
 } from "react-router-dom";
 import ErrorPage from "./error-page";
 import Post, {
@@ -27,13 +26,8 @@ const router = createBrowserRouter([
         },
       ],
     },
-    // {
-    //     path: "posts/:id",
-    //     element: <Post />,
-    //     loader: postLoader
-    // },
 ]);
-  
+
 ReactDOM.render(
     <React.StrictMode>
         <RouterProvider router={router} />
