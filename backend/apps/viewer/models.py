@@ -1,47 +1,51 @@
 from typing import Optional
-import uuid
-from datetime import datetime
-from pydantic import BaseModel, Field
+from datetime import datetime, UTC
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class PostModel(BaseModel):
-    id: str = Field(...)
-    blurb: str = Field(...)
-    date: datetime = Field(default_factory=datetime.utcnow)
-
-    class Config:
-        allow_population_by_field_name = True
-        schema_extra = {
+    model_config = ConfigDict(
+        populate_by_name=True,
+        json_schema_extra={
             "example": {
                 "id": "something-unique",
                 "blurb": "Something to share",
-                "date" : datetime(2014, 2, 10, 10, 50, 42, 389),
+                "date": "2014-02-10T10:50:42.000389",
             }
-        }
+        },
+    )
+
+    id: str = Field(...)
+    blurb: str = Field(...)
+    date: datetime = Field(default_factory=lambda: datetime.now(UTC))
+
 
 class UpdatePostModel(BaseModel):
-    blurb: str = Field(...)
-    date: datetime = Field(default_factory=datetime.utcnow)
-
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "blurb": "Something to share",
-                "date" : datetime(2014, 2, 10, 10, 50, 42, 389),
+                "date": "2014-02-10T10:50:42.000389",
             }
         }
+    )
+
+    blurb: str = Field(...)
+    date: datetime = Field(default_factory=lambda: datetime.now(UTC))
+
 
 class CommentModel(BaseModel):
-    id: str = Field(...)
-    blurb: str = Field(...)
-    date: datetime = Field(default_factory=datetime.utcnow)
-
-    class Config:
-        allow_population_by_field_name = True
-        schema_extra = {
+    model_config = ConfigDict(
+        populate_by_name=True,
+        json_schema_extra={
             "example": {
                 "id": "something-unique",
                 "blurb": "Something to share",
-                "date" : datetime(2014, 2, 10, 10, 50, 42, 389)
+                "date": "2014-02-10T10:50:42.000389",
             }
-        }
+        },
+    )
+
+    id: str = Field(...)
+    blurb: str = Field(...)
+    date: datetime = Field(default_factory=lambda: datetime.now(UTC))

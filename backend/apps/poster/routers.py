@@ -4,7 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from typing import Optional
 
 from .models import PostModel, UpdatePostModel
-from datetime import datetime
+from datetime import datetime, UTC
 import time
 import api_security
 from config import settings
@@ -17,7 +17,7 @@ async def create_post_or_comment(
     post: PostModel = Body(...),
     poster_id_from_key: Optional[str] = Depends(api_security.get_poster_id),
 ):
-    now = datetime.utcnow()
+    now = datetime.now(UTC)
     post = jsonable_encoder(post)
 
     if poster_id_from_key is not None:
