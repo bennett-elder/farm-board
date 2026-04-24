@@ -11,6 +11,7 @@ class ServerSettings(BaseSettings):
     HOST: str = "0.0.0.0"
     PORT: int = 8000
     API_KEYS: str
+    STRICT_API_KEYS: bool = False
     FRONTEND_BUILD_PATH: str = "../frontend/build"
     FRONTEND_TITLE: str = "FARM Board"
     FRONTEND_SHORTNAME: str = "farm-board"

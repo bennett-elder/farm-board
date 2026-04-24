@@ -1,10 +1,18 @@
-from fastapi import HTTPException, status, Security, FastAPI
+from fastapi import HTTPException, status, Security, Depends
 from fastapi.security import APIKeyHeader, APIKeyQuery
-import os
+from typing import Optional
 from config import settings
 
 api_key_query = APIKeyQuery(name="api-key", auto_error=False)
 api_key_header = APIKeyHeader(name="x-api-key", auto_error=False)
+
+# Maps validated key string → poster_id (None if the key has no associated poster)
+_api_key_map: dict = {}
+
+
+def set_key_map(key_map: dict):
+    global _api_key_map
+    _api_key_map = key_map
 
 
 def get_api_key(
@@ -40,3 +48,11 @@ def get_api_key(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Invalid API Key",
     )
+
+
+def get_poster_id(
+    api_key: str = Depends(get_api_key),
+) -> Optional[str]:
+    """Return the poster_id associated with the validated API key, or None if the key
+    has no poster_id (legacy keys that rely on the POST body for identification)."""
+    return _api_key_map.get(api_key)

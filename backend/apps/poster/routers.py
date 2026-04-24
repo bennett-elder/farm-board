@@ -1,24 +1,43 @@
-from fastapi import APIRouter, Body, Request, HTTPException, status
+from fastapi import APIRouter, Body, Request, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
+from typing import Optional
 
 from .models import PostModel, UpdatePostModel
 from datetime import datetime
 import time
+import api_security
+from config import settings
 
 router = APIRouter()
 
 @router.post("/", response_description="Add new post")
-async def create_post_or_comment(request: Request, post: PostModel = Body(...)):
+async def create_post_or_comment(
+    request: Request,
+    post: PostModel = Body(...),
+    poster_id_from_key: Optional[str] = Depends(api_security.get_poster_id),
+):
     now = datetime.utcnow()
     post = jsonable_encoder(post)
-    post2 = {k: v for k, v in post.items() if v is not None}
-    print('called post')
-    print(post)
-    print(post2)
-    print(post["id"])
-    id = post["id"]
-    print(id)
+
+    if poster_id_from_key is not None:
+        id = poster_id_from_key
+    elif settings.STRICT_API_KEYS:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="API key does not have an associated poster ID",
+        )
+    elif post.get("id"):
+        # Deprecated: poster identifies itself via the POST body
+        id = post["id"]
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Missing poster ID",
+        )
+
+    post["id"] = id
+
     if (found_post := await request.app.mongodb["posts"].find_one({"id": id})) is not None:
         # found so update existing post
         update_post = {
@@ -36,15 +55,14 @@ async def create_post_or_comment(request: Request, post: PostModel = Body(...)):
         )
 
     # either way create a new comment record
-    new_comment: UpdatePostModel = { 
-        "id": post["id"],
+    new_comment: UpdatePostModel = {
+        "id": id,
         "blurb": post["blurb"],
         "date": now
     }
     new_comment_result = await request.app.mongodb["comments"].insert_one(
         new_comment
     )
-    print(new_comment)
     created_comment = await request.app.mongodb["comments"].find_one(
         {"_id": new_comment_result.inserted_id}
     )

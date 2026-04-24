@@ -41,11 +41,13 @@ async def startup_db_client():
     if (settings.API_KEYS == 'USE TABLE'):
         key_collection=app.mongodb["api-keys"]
         cursor=key_collection.find()
-        keys=[]
+        key_map={}
         for document in await cursor.to_list(length=10000):
-            keys.append(document["key"])        
-        csvlist=','.join(keys)
-        settings.API_KEYS = csvlist
+            key_map[document["key"]] = document.get("poster_id")
+        settings.API_KEYS = ','.join(key_map.keys())
+        api_security.set_key_map(key_map)
+    else:
+        api_security.set_key_map({k.strip(): None for k in settings.API_KEYS.split(',')})
     if settings.APP_MODE != "dev":
         frontend_folder = settings.FRONTEND_BUILD_PATH
         replace_title_and_description(f'{frontend_folder}/index.html')

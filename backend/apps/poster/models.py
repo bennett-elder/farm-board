@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 
 class PostModel(BaseModel):
-    id: str = Field(...)
+    id: Optional[str] = None
     blurb: str = Field(...)
     date: datetime = Field(default_factory=datetime.utcnow)
 
@@ -13,7 +13,6 @@ class PostModel(BaseModel):
         allow_population_by_field_name = True
         schema_extra = {
             "example": {
-                "id": "something-unique",
                 "blurb": "Something to share",
                 "date" : datetime(2014, 2, 10, 10, 50, 42, 389),
             }
